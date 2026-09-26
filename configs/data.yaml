@@ -1,0 +1,50 @@
+# ============================================================================
+# 数据路径的唯一权威来源（W1-A1-2）
+#
+# 约定：所有脚本都从这里读路径，不允许在脚本里硬编码数据集目录名。
+#      相对路径一律相对于仓库根目录（本文件的上一级）解析。
+#
+# 为什么要有这个文件：转换脚本、验收脚本、后续的特征/训练脚本都要读同一批
+# 数据，路径一旦各写一份，就会出现「改了一处、另一处仍指向旧目录」的情况，
+# 而重跑时会在旁边悄悄生成第二份副本——A1「单一权威副本」当场破功。
+# ============================================================================
+
+dataset: KuaiRec 2.0
+
+# 原始 CSV 目录（数据集官方发布文件；已被 .gitignore 排除，不入库）
+raw_dir: data/KuaiRec 2.0/data
+
+# 派生 Parquet 目录（转换产物；已被 .gitignore 排除，不入库）
+parquet_dir: data/KuaiRec 2.0/parquet
+
+# 两个交互矩阵
+#   small: 全观测矩阵（每个用户对每个视频都有记录）-> 离线反事实评估
+#   big:   自然曝光矩阵（真实曝光日志）            -> 训练 / 常规离线评估
+matrices:
+  small:
+    csv: small_matrix.csv
+    parquet: small_matrix.parquet
+    observed: full
+  big:
+    csv: big_matrix.csv
+    parquet: big_matrix.parquet
+    observed: natural
+
+# 辅助文件（A3 数据画像 / LLM 语义特征源）
+side_files:
+  item_daily_features: item_daily_features.csv
+  kuairec_caption_category: kuairec_caption_category.csv
+  user_features: user_features.csv
+  user_features_raw: user_features_raw.csv
+  item_categories: item_categories.csv
+  video_raw_categories_multi: video_raw_categories_multi.csv
+  social_network: social_network.csv
+
+# CSV -> Parquet 的转换参数（两个转换脚本共用，避免各写一份）
+convert:
+  compression: zstd
+  row_group_size: 100000
+  # 必须用 %.f：原始 CSV 的小数秒位数不固定（1/2/3 位），
+  # 用 %.3f 只认恰好 3 位，配合 strict=False 会把其余行静默变成 null
+  # （实测 big_matrix 丢 1,252,706 行 = 10.00%，small_matrix 多丢 447,791 行）。
+  time_format: "%Y-%m-%d %H:%M:%S%.f"
