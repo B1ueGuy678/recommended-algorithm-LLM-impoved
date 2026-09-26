@@ -1,0 +1,107 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.python-version
+
+# ============================================================
+# 数据与模型产物（体积大，一律不入库；用脚本/说明文档复现）
+# ============================================================
+data/
+datasets/
+raw/
+interim/
+processed/
+features/
+checkpoints/
+ckpt/
+weights/
+models/
+outputs/
+artifacts/
+runs/
+logs/
+
+# 数据 / 权重 / 索引文件后缀兜底
+*.parquet
+*.feather
+*.arrow
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+*.h5
+*.msgpack
+*.db
+*.duckdb
+*.sqlite
+*.index
+*.faiss
+*.ann
+
+# 大规模样本 / 提交产物
+*.csv
+*.tsv
+!docs/**/*.csv
+
+# ============================================================
+# 缓存与实验追踪
+# ============================================================
+.cache/
+.hf_home/
+hf_cache/
+transformers_cache/
+torch_cache/
+wandb/
+mlruns/
+lightning_logs/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ============================================================
+# 环境变量与密钥（绝不入库）
+# ============================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials.json
+
+# ============================================================
+# IDE / 编辑器 / 操作系统
+# ============================================================
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# 注意：以下文件必须入库，不要取消注释忽略它们
+#   uv.lock / requirements*.txt  —— 环境可复现的前提
+#   configs/**.yaml              —— 实验配置，是实验记录的一部分
+#   reports/**.md                —— 技术报告与消融表
+# ============================================================

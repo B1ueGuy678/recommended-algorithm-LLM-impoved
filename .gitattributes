@@ -1,0 +1,31 @@
+# 默认交给 git 判断，仓库内统一为 LF（跨 Windows / WSL2 协作时避免整文件 diff）
+* text=auto eol=lf
+
+# Windows 脚本保持 CRLF，否则部分环境下无法直接执行
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制资源
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.xlsx binary
+
+# 数据与权重（正常应被 .gitignore 排除，这里再兜一层，防止被 --force 误入库时污染 diff）
+*.parquet binary
+*.npy     binary
+*.npz     binary
+*.pkl     binary
+*.pt      binary
+*.pth     binary
+*.ckpt    binary
+*.onnx    binary
+*.safetensors binary
+
+# 语言统计时把 notebook / 报告排除，避免虚高的代码行数
+*.ipynb linguist-documentation
+reports/** linguist-documentation
