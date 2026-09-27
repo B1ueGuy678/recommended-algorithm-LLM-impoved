@@ -1,8 +1,8 @@
 # 交接文档（HANDOFF）
 
 > **用途**：让接手的人或 AI 在 10 分钟内知道「现在到哪了、哪些数字可信、下一步该动什么」。
-> **基线提交**：`4dc98bb`（`origin/main` 已同步）
-> **本地未提交（4 项）**：`handoff.md`（本次更新）、`scripts/sync_git_proxy.ps1`（新增）、`scripts/w1_peak_dup_verify.py`（新增）、`reports/w1_peak_dup_verify.md`（新增）
+> **基线提交**：`c8b6708`（`origin/main` 已同步，`git ls-remote origin HEAD` 已校验）
+> **本地未提交**：无。本行此前记录的 4 项（`handoff.md`、`scripts/sync_git_proxy.ps1`、`scripts/w1_peak_dup_verify.py`、`reports/w1_peak_dup_verify.md`）已分别入 `a86c3d0` / `1cfe06b` / `e789634`
 > **最后更新**：2026-09-27
 
 ---
@@ -21,7 +21,7 @@ W1「数据与评估地基」的**数据侧已全部做完**：A1/A2（管线）
 
 | 项 | 状态 | 说明 |
 |---|---|---|
-| 仓库与远程 | ✅ | `main` 跟踪 `origin/main`，已同步到 `4dc98bb` |
+| 仓库与远程 | ✅ | `main` 跟踪 `origin/main`，已同步到 `c8b6708` |
 | 联网（代理） | ✅ | 代理端口漂移已用 `scripts/sync_git_proxy.ps1` 解决，见 §2.1 |
 | 运行环境 | ✅ | `.venv`（Python 3.12）+ torch 2.6.0+cu124，CUDA 可用 |
 | A1 数据目录规范化 | ✅ | 4/4 |
@@ -52,7 +52,11 @@ W1「数据与评估地基」的**数据侧已全部做完**：A1/A2（管线）
 |---|---|
 | `a853161` | `chore: 初始化项目仓库` |
 | `051d2fe` | `feat(data): W1 数据管线落地`（6 files, +715） |
-| `4dc98bb` | `feat(data): W1 数据画像 A3 / 异常扫描 A4 / 矩阵差异 A5 落地`（7 files, +1619）← **当前 HEAD，已推送** |
+| `4dc98bb` | `feat(data): W1 数据画像 A3 / 异常扫描 A4 / 矩阵差异 A5 落地`（7 files, +1619） |
+| `a86c3d0` | `chore(scripts): 新增 git 代理端口同步脚本 sync_git_proxy.ps1`（1 file, +111） |
+| `1cfe06b` | `feat(data): W1 峰值日重复写入核实（A4 补充）`（2 files, +636） |
+| `e789634` | `docs: handoff 更新至 A4 补充完成状态`（1 file, +283/−119） |
+| `c8b6708` | `docs: README 同步 .venv/torch 实测环境、目录树与验收/留档两条红线`（1 file, +5/−2）← **当前 HEAD，已推送** |
 
 **联网的两个必需配置**（`.git/config`）：
 
@@ -88,7 +92,7 @@ port 443 via 127.0.0.1 after 2101 ms: Could not connect to server
 
 **⚠️ 在 DSH 沙箱内 `git push` 会失败**：git 的 HTTPS 凭据助手是 Cygwin `sh`，无法创建命名管道（`Win32 error 5`），读不到 Windows 凭据管理器里的凭据，报 `could not read Username`。**这是沙箱边界，不是配置错**——需要 `danger-full-access` 提权。
 
-### 2.2 文件清单（`git ls-files` 22 个已入库 + 4 个待提交）
+### 2.2 文件清单（`git ls-files` 25 个已入库，无待提交）
 
 ```
 .gitattributes        .gitignore        README.md          handoff.md
@@ -102,9 +106,13 @@ scripts/big_matrix_csv_to_parquet.py
 scripts/small_matrix_csv_to_parquet_cast_data.py
 scripts/w1_data_acceptance.py           scripts/w1_data_profile.py
 scripts/w1_data_anomaly.py              scripts/w1_matrix_diff.py
+scripts/sync_git_proxy.ps1              scripts/w1_peak_dup_verify.py
+reports/w1_peak_dup_verify.md
 ```
 
-**待提交（4 项）**：`scripts/sync_git_proxy.ps1`、`scripts/w1_peak_dup_verify.py`、`reports/w1_peak_dup_verify.md`（以上新增）、`handoff.md`（本次更新）。
+**待提交**：无。上述 4 项在 `4dc98bb` 之后已提交并推送（`a86c3d0` / `1cfe06b` / `e789634`）。
+
+> **元数据滞后是个反复出现的坑**：本节标题与文档头部曾长期写着「4 项未提交」，而 git 早已是另一个状态（写 A、实际 B）。判断「是否真的未提交」一律以 `git status` / `git log` / `git ls-remote origin HEAD` 为准，**不要相信文档自述**；每次提交后回填这两处。
 
 **入库约定**：`data/`、checkpoint、权重、缓存、密钥一律**不入库**；`uv.lock`、`configs/**.yaml`、`reports/**.md` **必须入库**（实验可复现性的前提）。
 
