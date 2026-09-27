@@ -85,7 +85,7 @@
 | GPU 功耗 | 上限 140W，**默认仅 55W** | ⚠️ 不改设置所有训练慢一倍以上，插电 + 厂商性能模式 |
 | CPU / 内存 | i7-14650HX（24 线程）/ **16 GB** | 内存是真正的瓶颈：放弃 MIND-large，Polars 流式落 Parquet |
 | 磁盘 | C 盘剩 ~162 GB，D 盘剩 ~236 GB | 数据与 checkpoint 全放 D 盘 |
-| 软件 | Python 3.13.15，已有 uv / git；无 torch、conda、Docker | 用 uv 建 3.12 虚拟环境（3.13 上不少 ML 库轮子不全） |
+| 软件 | 系统 Python 3.13.15，已有 uv / git；无 conda、Docker。项目 `.venv` 已建：**Python 3.12.13 + torch 2.6.0+cu124，`cuda.is_available() = True`** | 用 uv 建 3.12 虚拟环境（3.13 上不少 ML 库轮子不全） |
 
 **按 8GB 显存 / 16GB 内存标定的关键参数**
 
@@ -137,7 +137,8 @@ $env:PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 ├── src/              # 源码包：data / recall / rank / llm / serve / eval
 ├── tests/            # pytest 单测与数据契约测试
 ├── reports/          # 技术报告、消融表、图表（入库）
-└── README.md
+├── README.md         # 项目宪章：定位 / 交付 / 技术栈 / 节奏 / 红线
+└── handoff.md        # 交接文档：可信数字、踩坑、未完成项（入库）
 ```
 
 ---
@@ -149,6 +150,8 @@ $env:PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 - 不把本地模拟说成线上 A/B：写「模拟分流实验 / 离线反事实评估」才经得起追问。
 - 不只做 demo：能解释每一步为什么这么做，比刷到 SOTA 重要。
 - **AI 可以写代码，不能定标准**：评估协议、特征穿越排查、异常归因、消融对照设计、结果叙事必须本人拍板。
+- **验收要可执行**：不接受「我检查过了」，只接受「跑这个脚本，退出码 0」。判据要能挂掉——放一个故意违规的探针验证过，才算它真的在检查。
+- **踩坑要留档**：踩过的坑写进报告与交接文档，避免重犯。
 
 ---
 
